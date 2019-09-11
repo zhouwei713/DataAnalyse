@@ -31,7 +31,14 @@ train_x, test_x, train_y, test_y = train_test_split(data, digits.target, random_
 # 采用 Z-Score 规范化
 ss = preprocessing.StandardScaler()
 train_ss_x = ss.fit_transform(train_x)
-test_ss_x = ss.fit_transform(test_x)
+test_ss_x = ss.transform(test_x)
+
+# 创建分类器并预测
+knn = KNeighborsClassifier()
+knn.fit(train_ss_x, train_y)
+predict_y = knn.predict(test_ss_x)
+print("KNN 准确率: %.4lf" % accuracy_score(test_y, predict_y))
+
 
 
 
