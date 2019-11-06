@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>我的股票走势图</title>
+    <script src="https://cdn.bootcss.com/jquery/3.0.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://assets.pyecharts.org/assets/echarts.min.js"></script>
+</head>
+<body>
+     <div id="form-div">
+         <form id="form1" onsubmit="return false" action="##" method="post">
+             <p>股票名称：<input name="stockName" type="text" id="stockName" tabindex="1" size="16" value="" placeholder="股票名称"/></p>
+             <p>查询时间：<input name="queryTime" type="text" id="queryTime" tabindex="2" size="16" value="" placeholder="输入30查询近30天数据"/></p>
+             <p><input type="submit" value="查询" onclick="getData()"></p>
+         </form>
+     </div>
+    <div id="kline" style="width:1000px; height:600px;"></div>
+    <script>
+        $(
+            function () {
+                var chart = echarts.init(document.getElementById('kline'), 'white', {renderer: 'canvas'});
+                $.ajax({
+                    type: "GET",
+                    url: "http://127.0.0.1:5000/Kline",
+                    dataType: 'json',
+                    success: function (result) {
+                        chart.setOption(result);
+                    }
+                });
+            }
+        );
+        function getData() {
+            var chart = echarts.init(document.getElementById('kline'), 'white', {renderer: 'canvas'});
+            $.ajax({
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/Kline" ,//url
+                data: $('#form1').serialize(),
+                success: function (result) {
+                    chart.setOption(result);
+                },
+                error: function() {
+                    alert("异常！");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
